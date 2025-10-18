@@ -3,8 +3,6 @@ name: bia
 services:
   postgresql:
     image: postgres:17.4
-    volumes:
-      - ~/Users/hoangphong/Documents/bia/postgres-data/:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=bia
       - POSTGRES_PASSWORD=bia@123

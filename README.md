@@ -1,3 +1,8 @@
+export PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH"
+docker compose -f postgresql.yml up -d
+
+jhipster import-jdl jhipster-jdl.jdl
+
 # bia
 
 This application was generated using JHipster 8.11.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v8.11.0](https://www.jhipster.tech/documentation-archive/v8.11.0).

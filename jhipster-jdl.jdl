@@ -1,0 +1,328 @@
+
+
+/* Chi nhánh / địa điểm */
+entity ClubLocation {
+  clubLocationId Long required,      // Khóa chính
+  name String required,              // Tên chi nhánh / địa điểm
+  address String,                    // Địa chỉ chi nhánh
+  phone String,                      // Số điện thoại liên hệ
+  email String,                       // Email chi nhánh
+  website String,                    // Website chi nhánh
+  openTime String,                   // Giờ mở cửa (ví dụ: "09:00")
+  closeTime String,                  // Giờ đóng cửa (ví dụ: "22:00")
+  managerName String,                // Tên quản lý chi nhánh
+  managerPhone String,               // Số điện thoại quản lý
+  active Boolean,                    // Trạng thái hoạt động
+  createdAt Instant,                 // Ngày tạo bản ghi
+  updatedAt Instant,                 // Ngày cập nhật
+  createdUser String,                // Người tạo bản ghi
+  updatedUser String,                // Người cập nhật bản ghi
+  deleted Boolean                    // Cờ xóa mềm
+}
+
+/* Loại bàn bida */
+entity TableType {
+  tableTypeId Long required,         // Khóa chính
+  code String required unique,       // Mã định danh loại bàn
+  name String required,              // Tên loại bàn
+  description String,                // Mô tả chi tiết loại bàn
+  maxPlayers Integer,                // Số người tối đa chơi
+  tableSize String,                  // Kích thước bàn (9ft, 7ft,…)
+  material String,                   // Chất liệu bàn
+  active Boolean,                    // Trạng thái sử dụng
+  createdAt Instant,                 // Ngày tạo bản ghi
+  updatedAt Instant,                 // Ngày cập nhật
+  createdUser String,                // Người tạo bản ghi
+  updatedUser String,                // Người cập nhật
+  deleted Boolean                    // Cờ xóa mềm
+}
+
+/* Bàn bida */
+entity BilliardTable {
+  billiardTableId Long required,     // Khóa chính
+  tableNo String required,           // Số hiệu bàn
+  status String required,       // Trạng thái bàn: AVAILABLE, OCCUPIED, MAINTENANCE
+  tableTypeId Long required,         // Liên kết TableType
+  clubLocationId Long required,      // Liên kết chi nhánh
+  maxPlayers Integer,                // Số người tối đa trên bàn
+  notes String,                      // Ghi chú thêm
+  active Boolean,                    // Trạng thái hoạt động
+  createdAt Instant,                 // Ngày tạo bản ghi
+  updatedAt Instant,                 // Ngày cập nhật
+  createdUser String,                // Người tạo bản ghi
+  updatedUser String,                // Người cập nhật
+  deleted Boolean                    // Cờ xóa mềm
+}
+
+/* Dịch vụ bida */
+entity BilliardService {
+  billiardServiceId Long required,   // Khóa chính
+  code String required unique,       // Mã dịch vụ
+  name String required,              // Tên dịch vụ
+  description String,                // Mô tả chi tiết
+  category String,          // Loại dịch vụ: RENTAL, TRAINING, SUPPORT,…
+  defaultUnit String,             // Đơn vị tính mặc định
+  price BigDecimal,                  // Giá dịch vụ mặc định
+  attributes String,                 // Thuộc tính mở rộng (JSON)
+  active Boolean,                    // Trạng thái hoạt động
+  createdAt Instant,                 // Ngày tạo bản ghi
+  updatedAt Instant,                 // Ngày cập nhật
+  createdUser String,                // Người tạo bản ghi
+  updatedUser String,                // Người cập nhật
+  deleted Boolean                    // Cờ xóa mềm
+}
+
+/* Giá dịch vụ */
+entity BilliardServicePrice {
+  billiardServicePriceId Long required,  // Khóa chính
+  billiardServiceId Long required,       // Liên kết dịch vụ
+  clubLocationId Long required,          // Liên kết chi nhánh
+  tableTypeId Long,                      // Áp dụng cho loại bàn cụ thể (nullable)
+  price BigDecimal required,             // Giá dịch vụ
+  priceUnit String required,          // Đơn vị tính
+  validFrom LocalDate,                   // Ngày bắt đầu hiệu lực
+  validTo LocalDate,                     // Ngày kết thúc hiệu lực (nullable)
+  active Boolean,                        // Trạng thái giá có hiệu lực
+  createdAt Instant,
+  updatedAt Instant,
+  createdUser String,
+  updatedUser String,
+  deleted Boolean
+}
+
+/* Sản phẩm */
+entity ClubProduct {
+  clubProductId Long required,       // Khóa chính
+  sku String unique,                 // Mã sản phẩm
+  name String required,              // Tên sản phẩm
+  description String,                // Mô tả chi tiết
+  category String,          // Loại: DRINK, FOOD, ACCESSORY
+  unit String,                       // Đơn vị tính (chai, cái,…)
+  price BigDecimal,                  // Giá mặc định
+  inventoryThreshold Integer,        // Ngưỡng tồn kho cảnh báo
+  active Boolean,                    // Trạng thái còn bán
+  attributes String,                 // Thuộc tính mở rộng (JSON)
+  createdAt Instant,                 // Ngày tạo
+  updatedAt Instant,                 // Ngày cập nhật
+  createdUser String,                // Người tạo
+  updatedUser String,                // Người cập nhật
+  deleted Boolean                    // Cờ xóa mềm
+}
+
+/* Giá sản phẩm */
+entity ClubProductPrice {
+  clubProductPriceId Long required,  // Khóa chính
+  clubProductId Long required,       // Liên kết sản phẩm
+  clubLocationId Long required,      // Liên kết chi nhánh
+  price BigDecimal required,         // Giá sản phẩm
+  validFrom LocalDate,               // Ngày bắt đầu
+  validTo LocalDate,                 // Ngày kết thúc (nullable)
+  active Boolean,                    // Trạng thái giá
+  createdAt Instant,
+  updatedAt Instant,
+  createdUser String,
+  updatedUser String,
+  deleted Boolean
+}
+
+/* Tồn kho */
+entity ProductInventory {
+  productInventoryId Long required,  // Khóa chính
+  clubProductId Long required,       // Liên kết sản phẩm
+  clubLocationId Long required,      // Liên kết chi nhánh
+  quantity Integer required,         // Số lượng hiện có
+  minThreshold Integer,              // Ngưỡng cảnh báo
+  active Boolean,                    // Trạng thái tồn kho
+  createdAt Instant,
+  updatedAt Instant,
+  createdUser String,
+  updatedUser String,
+  deleted Boolean
+}
+
+/* Nhân viên */
+entity ClubStaff {
+  clubStaffId Long required,         // Khóa chính
+  username String unique,            // Tên đăng nhập
+  fullName String,                   // Họ và tên
+  role String,                    // Vai trò
+  phone String,                      // Số điện thoại
+  email String,                      // Email
+  active Boolean,                    // Trạng thái làm việc
+  createdAt Instant,
+  updatedAt Instant,
+  createdUser String,
+  updatedUser String,
+  deleted Boolean
+}
+
+/* Khách hàng */
+entity ClubCustomer {
+  clubCustomerId Long required,      // Khóa chính
+  phone String unique,               // Số điện thoại
+  email String unique,               // Email
+  fullName String,                   // Họ và tên
+  memberLevel String,           // Cấp độ thành viên
+  points Integer,                    // Điểm tích lũy
+  attributes String,                 // Thông tin bổ sung (JSON)
+  createdAt Instant,
+  updatedAt Instant,
+  createdUser String,
+  updatedUser String,
+  deleted Boolean
+}
+
+/* Đặt bàn */
+entity TableBooking {
+  tableBookingId Long required,      // Khóa chính
+  bookingCode String required unique,// Mã đặt bàn
+  clubCustomerId Long required,      // Liên kết khách hàng
+  clubLocationId Long required,      // Liên kết chi nhánh
+  billiardTableId Long required,     // Liên kết bàn
+  startAt Instant required,          // Thời gian bắt đầu
+  endAt Instant,                     // Thời gian kết thúc
+  partySize Integer,                 // Số khách
+  status String required,     // Trạng thái booking
+  notes String,                      // Ghi chú
+  createdAt Instant,
+  updatedAt Instant,
+  createdUser String,
+  updatedUser String,
+  deleted Boolean
+}
+
+/* Phiên chơi */
+entity BilliardSession {
+  billiardSessionId Long required,   // Khóa chính
+  sessionCode String required unique,// Mã phiên chơi
+  tableBookingId Long,               // Liên kết booking
+  clubCustomerId Long,               // Liên kết khách hàng
+  clubLocationId Long,               // Liên kết chi nhánh
+  billiardTableId Long,              // Liên kết bàn
+  staffInChargeId Long,              // Nhân viên phụ trách
+  startedAt Instant,                 // Thời gian bắt đầu
+  endedAt Instant,                   // Thời gian kết thúc
+  status String required,     // Trạng thái phiên
+  notes String,                      // Ghi chú
+  createdAt Instant,
+  updatedAt Instant,
+  createdUser String,
+  updatedUser String,
+  deleted Boolean
+}
+
+/* Đơn hàng */
+entity BilliardOrder {
+  billiardOrderId Long required,     // Khóa chính
+  orderCode String required unique,  // Mã đơn hàng
+  billiardSessionId Long,            // Liên kết phiên
+  clubCustomerId Long,               // Khách hàng
+  clubLocationId Long,               // Chi nhánh
+  orderTime Instant,                 // Thời gian tạo
+  status String,                // Trạng thái đơn
+  totalAmount BigDecimal,            // Tổng tiền
+  notes String,                      // Ghi chú
+  createdAt Instant,
+  updatedAt Instant,
+  createdUser String,
+  updatedUser String,
+  deleted Boolean
+}
+
+/* Chi tiết đơn hàng */
+entity BilliardOrderItem {
+  billiardOrderItemId Long required, // Khóa chính
+  billiardOrderId Long required,     // Liên kết đơn hàng
+  clubProductId Long,                // Liên kết sản phẩm
+  billiardServiceId Long,            // Liên kết dịch vụ
+  qty Integer required,              // Số lượng
+  unitPrice BigDecimal required,     // Giá đơn vị
+  amount BigDecimal required,        // Thành tiền
+  notes String,                      // Ghi chú
+  createdAt Instant,
+  updatedAt Instant,
+  createdUser String,
+  updatedUser String,
+  deleted Boolean
+}
+
+/* Hóa đơn */
+entity BilliardInvoice {
+  billiardInvoiceId Long required,   // Khóa chính
+  invoiceNo String required unique,  // Số hóa đơn
+  billiardSessionId Long,            // Phiên chơi liên quan
+  tableBookingId Long,               // Booking liên quan
+  clubCustomerId Long,               // Khách hàng
+  clubLocationId Long,               // Chi nhánh
+  issuedAt Instant,                  // Ngày phát hành
+  subtotal BigDecimal required,      // Tổng trước giảm giá & thuế
+  discountAmount BigDecimal,         // Giảm giá
+  taxAmount BigDecimal,              // Thuế
+  total BigDecimal required,         // Tổng cộng
+  paid Boolean,                      // Đã thanh toán chưa
+  paymentMethod String,       // Phương thức thanh toán
+  notes String,
+  createdAt Instant,
+  updatedAt Instant,
+  createdUser String,
+  updatedUser String,
+  deleted Boolean
+}
+
+/* Dòng hóa đơn */
+entity BilliardInvoiceLine {
+  billiardInvoiceLineId Long required,// Khóa chính
+  billiardInvoiceId Long required,    // Liên kết hóa đơn
+  description String,                 // Mô tả
+  qty BigDecimal,                     // Số lượng
+  unitPrice BigDecimal,               // Giá đơn vị
+  amount BigDecimal,                  // Thành tiền
+  metadata String,                    // Thuộc tính mở rộng (JSON)
+  createdAt Instant,
+  updatedAt Instant,
+  createdUser String,
+  updatedUser String,
+  deleted Boolean
+}
+
+/* Khuyến mãi */
+entity BilliardPromotion {
+  billiardPromotionId Long required,  // Khóa chính
+  code String unique,                 // Mã khuyến mãi
+  name String,                        // Tên khuyến mãi
+  type String,                 // Loại khuyến mãi
+  value BigDecimal,                   // Giá trị khuyến mãi
+  appliesTo String,                   // Áp dụng cho sản phẩm/dịch vụ/hóa đơn
+  active Boolean,                     // Trạng thái
+  validFrom LocalDate,                // Ngày bắt đầu hiệu lực
+  validTo LocalDate,                  // Ngày kết thúc hiệu lực
+  usageLimit Integer,                 // Giới hạn số lần sử dụng
+  createdAt Instant,
+  updatedAt Instant,
+  createdUser String,
+  updatedUser String,
+  deleted Boolean
+}
+
+/* Ảnh sản phẩm */
+entity ProductImage {
+  productImageId Long required,       // Khóa chính
+  clubProductId Long required,        // Liên kết sản phẩm
+  fileName String,                    // Tên file
+  fileType String,                    // Loại file (jpg, png…)
+  data Blob required,                 // Dữ liệu ảnh
+  mainImage Boolean,                  // Ảnh chính
+  createdAt Instant,
+  updatedAt Instant,
+  createdUser String,
+  updatedUser String,
+  deleted Boolean
+}
+
+
+/* SERVICE, DTO, PAGINATION */ 
+service * with serviceClass 
+dto * with mapstruct 
+paginate * with pagination
+
+
